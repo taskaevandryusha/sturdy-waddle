@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Магазин</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f0f8f0;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Выравниваем по верху */
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .main-container {
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .tab-button:hover {
+      background-color: #388e3c;
+    }
+
+    .shop-container {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .buy-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn-buy {
+      padding: 12px 28px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .btn-buy:hover {
+      background-color: #388e3c;
+    }
+
+    .missing-input {
+      padding: 8px;
+      border: 1px solid #d32f2f;
+      border-radius: 6px;
+      background-color: #ffecee;
+      text-align: center;
+      width: 100px;
+    }
+
+    .image-container {
+      width: 300px;
+      height: 300px;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 0 auto 20px auto;
+    }
+
+    .card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 16px 0;
+    }
+
+    .product-price {
+      font-size: 18px;
+      font-weight: 500;
+      color: #1b5e20;
+      margin: 12px 0;
+    }
+    #balance {
+      visibility: hidden;
+    }
+
+
+
+
+    .content-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch; /* Растягивает блоки по высоте */
+      width: 100%;
+      gap: 40px;
+    }
+
+    .student-balance {
+      text-align: center;        /* центрирует текст по горизонтали */
+      flex: 0 0 280px;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .shop-container {
+      /* Здесь ничего менять не нужно — высота определяется контентом */
+    }
+
+
+    .student-balance h3 {
+
+      font-size: 16px;
+      font-weight: 600;
+      color: #4caf50;
+      margin-bottom: 12px;
+    }
+
+    .crystals-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .crystals-display #displayBalance {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1b5e20;
+
+    }
+
+    .unit {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Адаптация для мобильных устройств */
+    @media (max-width: 768px) {
+      .content-wrapper {
+        flex-direction: column; /* Блоки друг под другом */
+        align-items: center;
+        gap: 20px;
+      }
+
+      .student-balance,
+      .shop-container {
+        width: 100%; /* Полная ширина на мобильных */
+        max-width: 400px;
+      }
+    }
+    .crystal {
+      margin-top: 80px;
+      margin-left: 20px;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; /* Обрезает выходящие за границы части */
+      border-radius: 50%; /* Если нужен круглый контейнер */
+    }
+
+    .crystal img {
+      max-width: 100%; /* Не шире контейнера */
+      max-height: 100%; /* Не выше контейнера */
+      width: auto; /* Сохраняет пропорции */
+      height: auto;
+      object-fit: contain; /* Важное свойство: сохраняет пропорции, не растягивает */
+    }
+
+    .progress-bar-container {
+       display: flex; /* сохраняет flex-контейнер */
+       align-items: flex-start; /* выравнивает по верхнему краю */
+       gap: 10px; /* расстояние между столбиком и текстом */
+       margin-top: 100px;
+     }
+
+    .bar-wrapper {
+      width: 30px; /* ширина столбика */
+      height: 450px; /* высота столбика */
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative; /* для позиционирования .progress-bar */
+    }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0; /* задаётся JS */
+      background-color: #4CAF50;
+      transition: height 0.3s;
+    }
+
+    .text-wrapper {
+      flex: 1; /* занимает оставшееся пространство */
+      padding-left: 5px; /* отступ от столбика */
+    }
+
+    .progress-bar-container p {
+      display: none;
+      margin: 0; /* убираем стандартные отступы */
+      font-size: 14px; /* размер шрифта */
+      margin-top: -90px;
+      margin-left: -200px;
+    }
+
+
+
+  </style>
+</head>
+<body>
+
+<div class="progress-bar-container">
+  <div class="bar-wrapper">
+    <div class="progress-bar"></div>
+  </div>
+  <div class="text-wrapper">
+    <p>Не хватает: 247 кристаллов</p>
+  </div>
+</div>
+
+
+
+<div class="main-container">
+  <!-- Вкладки-ссылки -->
+  <div class="tab-nav">
+    <a href="ind.html" class="tab-button">Тренажёр чтения</a>
+    <a href="newmath.html" class="tab-button">Математический тест</a>
+    <a href="control.html" class="tab-button">Панель управления</a>
+  </div>
+
+  <!-- Контейнер для баланса и товара -->
+  <div class="content-wrapper">
+    <!-- Блок баланса (слева) -->
+    <div class="student-balance">
+      <h3>Ваш баланс кристаллов</h3>
+      <div class="crystals-display">
+        <span id="displayBalance">489</span>
+        <span class="unit">кристалл(ов)</span>
+      </div>
+      <div class="crystal"><img src="animation.gif" alt="Крутящийся кристалл"></div>
+    </div>
+
+    <!-- Карточка товара (справа) -->
+    <div class="shop-container">
+      <div class="product-info">
+        <div class="image-container">
+          <a href="#" class="card__image">
+            <img src="./111.jpg" alt="Эксклюзивный предмет">
+          </a>
+        </div>
+        <h2 class="product-title">Аксолотль</h2>
+        <p class="product-price">Стоимость: 1000 кристаллов</p>
+
+        <div class="buy-container">
+          <button class="btn-buy">Купить</button>
+          <p class="value" id="balance">489</p>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<button id="full-reset-balance-btn" class="btn-reset">Обнулить баланс</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Получаем элементы
+    const displayBalanceElement = document.getElementById('displayBalance');
+    const progressBar = document.querySelector('.progress-bar');
+    const missingText = document.querySelector('.progress-bar-container p');
+    const buyButton = document.querySelector('.btn-buy');
+
+    // 2. Целевая стоимость товара
+    const itemPrice = 1000;
+
+    // 3. Функция сохранения баланса в localStorage
+    function saveBalance(balance) {
+      localStorage.setItem('crystals', JSON.stringify({ total: balance }));
+    }
+
+    // 4. Функция чтения баланса из localStorage (с fallback)
+    function getBalance() {
+      const saved = localStorage.getItem('crystals');
+      if (saved) {
+        return JSON.parse(saved).total;
+      }
+      return 421; // значение по умолчанию (как на картинке)
+    }
+
+    // 5. Функция обновления интерфейса
+    function updateUI(currentCrystals) {
+      displayBalanceElement.textContent = currentCrystals;
+
+      const progress = (currentCrystals / itemPrice) * 100;
+      const missingCrystals = itemPrice - currentCrystals;
+
+      progressBar.style.height = `${progress}%`;
+      missingText.textContent = `Не хватает: ${missingCrystals} кристаллов`;
+    }
+
+    // 6. Инициализация при загрузке
+    const initialBalance = getBalance();
+    updateUI(initialBalance);
+
+    // 7. Пример: обработчик кнопки "Купить" (если нужно)
+    buyButton.addEventListener('click', function() {
+      let currentBalance = getBalance();
+
+      if (currentBalance >= itemPrice) {
+        currentBalance -= itemPrice;
+        alert('Товар куплен!');
+      } else {
+        alert(`Недостаточно кристаллов! Требуется: ${itemPrice - currentBalance}`);
+      }
+
+      // Сохраняем новый баланс и обновляем интерфейс
+      saveBalance(currentBalance);
+      updateUI(currentBalance);
+    });
+
+    // 8. Обработка обнуления баланса
+    document.getElementById('full-reset-balance-btn').addEventListener('click', function() {
+      if (!confirm('Обнулить баланс?')) return;
+
+      saveBalance(0);
+      updateUI(0);
+      alert('Баланс обнулён!');
+    });
+  });
+</script>
+
+
+
+<script src="scripts.js"></script>
+
+
+
+
+
+
+</body>
+</html>
+
+

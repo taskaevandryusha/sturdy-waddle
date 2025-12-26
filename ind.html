@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тренажёр: исчезающий текст</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+<body><div class="tab-container">
+  <button class="tab-button" onclick="window.location.href='newmath.html'">Математический тест</button>
+  <button class="tab-button" onclick="window.location.href='shop.html'">Магазин</button>
+  <button class="tab-button" onclick="window.location.href='control.html'">Панель управления</button>
+</div>
+
+
+
+<div id="itogo-display" >
+  <img src="cristall.gif" alt="Описание GIF" id="gifCrystals"> <span id="itogo-value">0</span>
+</div>
+<div class="cate"><img src="999.gif" alt="Описание GIF"></div>
+
+
+
+
+<div class="app-window">
+  <div class="window-header">Тренажёр: исчезающий текст</div>
+  <div class="window-content">
+    <input type="file" id="file-input" accept=".txt" placeholder="Выберите файл">
+    <div id="word-count">Количество слов: не выбрано</div>
+    <input type="number" id="total-time" value="60" placeholder="Общее время (сек)">
+    <button id="start-btn">Старт</button>
+    <button id="stop-btn">Зачислить кристаллы</button>
+
+    <div id="stats" style="display:none;"></div>
+    <div id="text-container"></div>
+  </div>
+
+</div>
+
+
+
+<script>
+  $(document).ready(function() {
+    let words = [];
+    let timers = [];
+    let fileSelected = false;
+    let totalTime = 60;
+
+    // Чтение файла
+    $('#file-input').on('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        fileSelected = true;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          words = e.target.result.trim().split(/\s+/).filter(word => word.length > 0);
+          $('#word-count').text(`Количество слов: ${words.length}`);
+        };
+        reader.onerror = function() {
+          alert('Ошибка при чтении файла.');
+          words = [];
+          fileSelected = false;
+          $('#word-count').text('Количество слов: ошибка');
+        };
+        reader.readAsText(file);
+      } else {
+        words = [];
+        fileSelected = false;
+        $('#word-count').text('Количество слов: не выбрано');
+      }
+    });
+
+    // Расчёт времени скрытия для каждого слова
+    function calculateHidingTimes() {
+      const charsCount = words.reduce((sum, word) => sum + word.length, 0);
+      totalTime = parseInt($('#total-time').val()) || 60;
+
+      let cumulativeTime = 0;
+      return words.map(word => {
+        const wordDuration = (word.length / charsCount) * totalTime * 1000;
+        cumulativeTime += wordDuration;
+        return cumulativeTime;
+      });
+    }
+
+    // Показ всего текста и запуск скрытия слов
+    function startHiding() {
+      // Очищаем контейнер и останавливаем предыдущие таймеры
+      $('#text-container').empty();
+      timers.forEach(clearTimeout);
+      timers = [];
+
+      // Создаём span для каждого слова
+      const wordElements = words.map(word =>
+        `<span class="word-span">${word}</span>`
+      );
+      $('#text-container').html(wordElements.join(' '));
+
+      // Получаем времена скрытия
+      const hidingTimes = calculateHidingTimes();
+
+      // Запускаем таймеры скрытия
+      words.forEach((word, index) => {
+        const timer = setTimeout(() => {
+          $(`.word-span:eq(${index})`).css('opacity', '0');
+        }, hidingTimes[index]);
+        timers.push(timer);
+      });
+
+      // Показываем кнопку «Стоп»
+      $('#stop-btn').show();
+    }
+
+    // Остановка процесса
+    function stopHiding() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      $('#stop-btn').hide();
+    }
+
+    // Обработчики кнопок
+    $('#start-btn').click(function() {
+      if (!fileSelected) {
+        alert('Сначала выберите файл!');
+        return;
+      }
+      if (words.length === 0) {
+        alert('Файл не содержит слов.');
+        return;
+      }
+      stopHiding(); // Останавливаем предыдущий процесс
+      startHiding();
+    });
+
+
+
+
+    $('#stop-btn').click(function() {
+      stopHiding(); // Останавливаем процесс скрытия слов
+
+      if (words.length > 0) {
+        localStorage.setItem('wordsCount', words.length); // Сохраняем в localStorage
+      }
+
+      // Создаём переменную itogo и присваиваем ей значение из localStorage
+      let itogo = localStorage.getItem('wordsCount');
+
+      // Выводим значение переменной в консоль для проверки
+      console.log('Значение itogo:', itogo);
+
+      // Преобразуем itogo в число (из строки)
+      itogo = parseInt(itogo) || 0; // Если null/undefined/NaN → 0
+
+      $('#itogo-value').text(itogo);
+
+      // 2. Добавляем класс с анимацией для числа
+      $('#itogo-value').addClass('pulse-animation');
+
+      // 3. Показываем GIF-анимацию
+      $('.cate').addClass('visible');
+
+      // 4. Убираем анимацию числа через 1200 мс (1.2 секунды)
+      setTimeout(() => {
+        $('#itogo-value').removeClass('pulse-animation');
+      }, 6000);
+
+      // 5. Скрываем GIF через 5000 мс (5 секунд)
+      setTimeout(() => {
+        $('.cate').removeClass('visible');
+      }, 5000);
+
+      // Получаем текущие данные из localStorage
+      let storedData;
+      try {
+        const raw = localStorage.getItem('crystals');
+        storedData = raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        console.error('Ошибка парсинга localStorage:', e);
+        storedData = null;
+      }
+
+      // Если данных нет — инициализируем
+      if (!storedData) {
+        storedData = {
+          total: 0,
+          math: 0,
+          reading: 0,
+          quarantine: 0,
+          history: []
+        };
+      }
+
+      // Прибавляем itogo к quarantineCrystals
+      storedData.quarantine += itogo;
+
+      // Сохраняем обновлённые данные
+      localStorage.setItem('crystals', JSON.stringify(storedData));
+
+      // Обновляем отображение баланса на странице
+      updateBalanceDisplay();
+
+      console.log(`К quarantine прибавлено: ${itogo}. Новое значение: ${storedData.quarantine}`);
+    });
+
+
+
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

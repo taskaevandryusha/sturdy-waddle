@@ -1,0 +1,252 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+/* Контейнер вкладок */
+.tab-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Панель вкладок */
+.tab-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 10px 0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+/* Кнопки-вкладки — зелёный основной цвет */
+.tab-button {
+  display: inline-block;
+  padding: 14px 28px;
+  background-color: #4CAF50; /* Зелёный */
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.tab-button:hover {
+  background-color: #45a049; /* Тёмнее при наведении */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Активная вкладка — белая с зелёной границей */
+.tab-button.active {
+  background-color: white;
+  color: #4CAF50; /* Зелёный текст */
+  border-bottom: 4px solid #4CAF50; /* Зелёная линия */
+}
+
+/* Панель баланса — зелёная градиентная */
+.student-balance {
+  text-align: center;
+  padding: 25px;
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); /* Зелёный градиент */
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
+  color: white;
+}
+
+.student-balance h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.crystals-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.crystals-display #balance {
+  min-width: 40px;
+  text-align: right;
+}
+
+.unit {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .tab-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tab-button {
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .student-balance {
+    padding: 20px;
+  }
+
+  .crystals-display {
+    font-size: 24px;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .crystals-display {
+    font-size: 20px;
+    gap: 8px;
+  }
+
+  .unit {
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
+
+/* Контейнер для кнопок в правом верхнем углу */
+.balance-controls {
+  position: absolute;
+  top: 25px;          /* Отступ сверху (совпадает с padding .student-balance) */
+  right: 25px;       /* Отступ справа */
+}
+
+
+
+
+
+
+/* Кнопка в правом верхнем углу экрана */
+#full-reset-balance-btn {
+  position: fixed;
+  top: 25px;
+  right: 20px;
+  z-index: 1000; /* Чтобы была поверх других элементов */
+
+  padding: 12px 24px;
+  background-color: #85dd4d; /* Красный цвет (предупреждение) */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Эффект при наведении */
+#full-reset-balance-btn:hover {
+  background-color: #20dd46;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+}
+
+/* Эффект при нажатии */
+#full-reset-balance-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.2);
+}
+
+/* Стили для .student-balance (без изменений) */
+.student-balance {
+  text-align: center;
+  padding: 25px;
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
+  color: white;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.student-balance h3 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.crystals-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px 20px;
+  border-radius: 8px;
+}
+
+.crystals-display #balance {
+  min-width: 40px;
+  text-align: right;
+}
+
+.unit {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .student-balance {
+    padding: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .crystals-display {
+    font-size: 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .crystals-display {
+    font-size: 20px;
+    gap: 6px;
+  }
+
+  .unit {
+    font-size: 14px;
+  }
+
+}

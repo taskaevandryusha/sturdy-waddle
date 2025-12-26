@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+  <style>
+    /* Общие стили */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    /* Контейнер для вкладок */
+    .tab-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 0 20px;
+    }
+
+    /* Стили для кнопок-вкладок */
+    .tab-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.3s ease;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      min-width: 140px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tab-button:hover {
+      background-color: #d0d0d0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Активная вкладка */
+    .tab-button.active {
+      background-color: white;
+      color: #4CAF50;
+      border-bottom: 4px solid #4CAF50;
+      box-shadow: none;
+    }
+
+    /* Адаптивность: на узких экранах — вертикальные кнопки */
+    @media (max-width: 768px) {
+      .tab-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tab-button {
+        width: 100%;
+        text-align: center;
+        min-width: auto;
+      }
+    }
+
+    /* Панель управления */
+    .control-panel {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+    }
+
+    .control-panel h2 {
+      text-align: center;
+      color: #4CAF50;
+      margin-bottom: 24px;
+      font-size: 22px;
+    }
+
+    /* Раздел статистики */
+    .stats-section {
+      margin-bottom: 30px;
+    }
+
+    .stats-section h3 {
+      color: #555;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    /* Контейнер для карточек баланса */
+    .balance-cards {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* Общая карточка баланса */
+    .card.balance-card {
+      flex: 1;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card.balance-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Карточка "На счёте" (зелёная) */
+    .schet .card.balance-card {
+      background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+      color: white;
+    }
+
+    /* Карточка "В карантине" (оранжевая) */
+    .carantin .card.balance-card {
+      background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+      color: white;
+    }
+
+    /* Стили для надписей внутри карточек */
+    .card.balance-card .label {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .card.balance-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Кнопка "Зачислить" */
+    #credit-button {
+      display: block;
+      width: 100%;
+      max-width: 250px;
+      margin: 0 auto;
+      padding: 14px 0;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      letter-spacing: 0.5px;
+    }
+
+    #credit-button:hover {
+      background-color: #45a049;
+      transform: translateY(-1px);
+    }
+
+    #credit-button:active {
+      transform: translateY(0);
+    }
+    /* Скрытое по умолчанию модальное окно */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Содержимое окна */
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      max-width: 700px;
+      text-align: center;
+      position: relative;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    /* Кнопка закрытия */
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .close-button:hover {
+      color: #000;
+    }
+    #modal-gif {
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+<!-- Вкладки-кнопки -->
+<div class="tab-container">
+  <a href="ind.html" class="tab-button">Тренажёр чтения</a>
+  <a href="newmath.html" class="tab-button">Математический тест</a>
+  <a href="shop.html" class="tab-button">Магазин</a>
+
+</div>
+
+<div class="control-panel">
+  <h2>Панель управления (родитель)</h2>
+
+  <!-- Статистика ребёнка -->
+  <div class="stats-section">
+    <h3>Текущий баланс</h3>
+    <div class="balance-cards">
+      <div class="schet">
+        <div class="card balance-card">
+          <p class="label">На счёте</p>
+          <p class="value" id="balance">0</p>
+        </div>
+      </div>
+
+      <div class="carantin">
+        <div class="card balance-card">
+          <p class="label">В карантине</p>
+          <p class="value" id="quarantine-balance">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">×</span>
+        <div id="modal-body">
+          <p id="modal-message"></p>
+
+          <img
+            id="modal-gif"
+            src="http://localhost:63342/untitled10/cat.gif" alt="Кот танцует"
+            alt="Кот в анимации"
+            style="max-width: 100%; display: none;"
+
+          >
+
+
+
+          <audio
+            id="modal-audio"
+            preload="auto"
+          >
+            <source src="Gonna.mp3" type="audio/mpeg">
+
+            <source src="Gonna.ogg" type="audio/ogg">
+
+            Ваш браузер не поддерживает аудио.
+          </audio>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Кнопка "Зачислить" -->
+  <button id="credit-button" class="action-button">Зачислить</button>
+</div>
+
+<div id="mainTasksDiv"></div>
+<script>
+  // Основные элементы интерфейса (уникальные имена)
+  const parentCreditBtn = document.getElementById('credit-button');
+  const parentQuarantineEl = document.getElementById('quarantine-balance');
+  const parentAccountEl = document.getElementById('balance');
+
+  // Элементы модального окна (уникальные имена)
+  const parentModal = document.getElementById('modal');
+  const parentModalMsg = document.getElementById('modal-message');
+  const parentCloseBtn = document.querySelector('.close-button');
+  const gifImg = document.getElementById('modal-gif'); // Перенесли объявление сюда — глобально
+  const audioEl = document.getElementById('modal-audio'); // Перенесли объявление сюда — глобально
+
+  // Функции с префиксом parent_ (исключает конфликты)
+  function parent_showModal(message) {
+    // Текст сообщения
+    parentModalMsg.textContent = message;
+
+    // Сбрасываем предыдущие значения
+    gifImg.style.display = 'none';
+    gifImg.src = '';
+    audioEl.src = '';
+
+    // Определяем, что показывать и проигрывать
+    let gifSrc = '';
+    let audioSrc = '';
+
+    if (message.includes('больше 1000')) {
+      gifSrc = 'cat.gif'; // замените на реальный URL
+      audioSrc = 'Gonna.mp3'; // замените на реальный URL
+    } else if (message.includes('Теперь время получить заслуженную награду.')) {
+      gifSrc = 'cat.gif'; // замените на реальный URL
+      audioSrc = 'Gonna.mp3'; // замените на реальный URL
+    }
+
+    // Если есть GIF — показываем
+    if (gifSrc) {
+      gifImg.src = gifSrc;
+      gifImg.style.display = 'block';
+    }
+
+    // Если есть аудио — загружаем и проигрываем
+    if (audioSrc) {
+      audioEl.src = audioSrc;
+      audioEl.play().catch(e => {
+        console.warn('Аудио не удалось воспроизвести:', e);
+      });
+    }
+
+    // Показываем модальное окно
+    parentModal.style.display = 'flex';
+  }
+
+  function parent_hideModal() {
+    parentModal.style.display = 'none';
+  }
+
+  function parent_checkBalance() {
+    const dataStr = localStorage.getItem('crystals');
+
+    if (!dataStr) {
+      console.log('Данные crystals не найдены в localStorage');
+      return;
+    }
+
+    try {
+      const data = JSON.parse(dataStr);
+
+      if (data.total === undefined || data.quarantine === undefined) {
+        console.log('Поля total или quarantine отсутствуют в данных');
+        return;
+      }
+
+      const currentTotal = Number(data.total);
+      const currentQuarantine = Number(data.quarantine);
+
+      // Обновляем отображение обоих балансов
+      parentAccountEl.textContent = currentTotal;
+      parentQuarantineEl.textContent = currentQuarantine;
+
+      // Проверяем условия и показываем окно
+      if (currentTotal > 1000) {
+        parent_showModal('Миссия выполнена!\n' +
+          'Ты прошла все испытания и достигла цели.\n' +
+          'Теперь время получить заслуженную награду.');
+      } else if (currentTotal === 1000) {
+        parent_showModal('Ваш баланс равен 1000 — ровно в цели!');
+      } else {
+        console.log('Баланс меньше 1000');
+      }
+    } catch (e) {
+      console.error('Ошибка парсинга JSON:', e);
+    }
+  }
+
+  // Обработчики событий (с уникальными именами функций)
+  parentCloseBtn.addEventListener('click', parent_hideModal);
+
+  parentCreditBtn.addEventListener('click', () => {
+    let quarantineAmt = parseInt(parentQuarantineEl.textContent) || 0;
+    let accountAmt = parseInt(parentAccountEl.textContent) || 0;
+
+    if (quarantineAmt <= 0) {
+      alert('В карантине нет средств для зачисления!');
+      return;
+    }
+
+    // Переводим средства
+    accountAmt += quarantineAmt;
+    quarantineAmt = 0;
+
+    // Сохраняем в localStorage
+    localStorage.setItem('crystals', JSON.stringify({
+      total: accountAmt,
+      quarantine: quarantineAmt
+    }));
+
+    // Обязательно обновляем интерфейс после сохранения
+    parent_checkBalance();
+  });
+
+  // Запуск проверки при загрузке страницы
+  document.addEventListener('DOMContentLoaded', parent_checkBalance);
+</script>
+
+
+
+
+
+</body>
+</html>

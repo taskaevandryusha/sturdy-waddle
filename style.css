@@ -1,0 +1,239 @@
+/* Общие настройки */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: rgba(40, 167, 69, 0.2);
+  padding: 20px;
+}
+
+/* Контейнер для табов-кнопок */
+.tab-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+/* Кнопки‑табы (стилизованы как кнопки) */
+/* Кнопки‑табы (стилизованы как кнопки) */
+.tab-button {
+  padding: 12px 24px;
+  background-color: #4CAF50; /* Зелёный фон (как у заголовка) */
+  color: white;            /* Белый текст для контраста */
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: none; /* Убираем капс, если нужен обычный регистр */
+}
+
+.tab-button:hover {
+  background-color: #45a049; /* Темнее при наведении */
+}
+
+.tab-button:active {
+  transform: scale(0.98);
+  background-color: #3e8e41; /* Ещё темнее при нажатии */
+}
+
+.tab-button.active {
+  background-color: #2e7d32; /* Тёмно‑зелёный для активной вкладки */
+  color: white;
+}
+
+
+/* Контейнер контента */
+.tab-content.active {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Окно тренажёра */
+.app-window {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.window-header {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px;
+}
+
+.window-content {
+  padding: 24px;
+}
+
+/* Поле выбора файла */
+#file-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+#file-input:hover {
+  border-color: #bbb;
+}
+
+/* Индикатор количества слов */
+#word-count {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Поле ввода времени */
+#total-time {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+#total-time:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+/* Кнопки Старт/Стоп */
+button {
+  padding: 12px 24px;
+  margin: 0 8px 16px 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#start-btn {
+  background-color: #45a049;
+  color: white;
+}
+
+#stop-btn {
+  background-color: #dc3545;
+  color: white;
+  display: none;
+}
+
+/* Блок статистики */
+#stats {
+  margin: 16px 0;
+  padding: 12px;
+  background-color: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+  border-radius: 4px;
+  color: #2e7d32;
+  font-size: 14px;
+}
+
+/* Стиль для слов в контейнере */
+.word-span {
+  display: inline-block;
+  margin: 0 2px;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+  font-size: 30px;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+  .tab-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tab-button {
+    width: 100%;
+    text-align: left;
+  }
+
+  .app-window {
+    margin: 0 16px;
+    border-radius: 8px;
+  }
+
+  .window-content {
+    padding: 16px;
+  }
+}
+#gifCrystals{
+  width: 45px;
+  height:30px;
+}
+#itogo-display{
+  position: absolute;
+  margin-top: -80px;
+  margin-left: 1250px;
+  display: flex;
+  align-items: center; /* выравнивание по вертикали */
+  gap: 5px; /* расстояние между элементами */
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(2); /* Увеличиваем в 2 раза */
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pulse-animation {
+  display: inline-block;
+  animation: pulse 0.4s cubic-bezier(0.4, 0, 0.6, 1) 10; /* 10 раза */
+}
+.cate {
+  position: absolute;
+  margin-left: 1125px;
+  margin-top: 10px;
+  display: none; /* Изначально скрыт */
+  z-index: 1000;
+}
+
+.cate.visible {
+  display: block; /* Делаем видимым */
+}
+
